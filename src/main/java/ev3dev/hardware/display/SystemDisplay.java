@@ -27,8 +27,19 @@ public final class SystemDisplay {
      * @throws RuntimeException initialization of the display fails
      */
     public static DisplayInterface initializeRealDisplay() {
-        ILibc libc = new NativeLibc();
+        return initializeRealDisplay(new NativeLibc());
+    }
 
+    /**
+     * <p>Initialize real on-brick display.</p>
+     * <p><b>BEWARE:</b> this function may be called only once,
+     * otherwise the behavior is undefined.</p>
+     *
+     * @param libc C library implementation to use.
+     * @return new instance of display appropriate for the current session
+     * @throws RuntimeException initialization of the display fails
+     */
+    public static DisplayInterface initializeRealDisplay(ILibc libc) {
         LOGGER.debug("initializing new real display");
         try {
             return new OwnedDisplay(libc);
@@ -57,4 +68,16 @@ public final class SystemDisplay {
         return initializeRealDisplay().openFramebuffer();
     }
 
+    /**
+     * <p>Initialize real on-brick display with framebuffer.</p>
+     * <p><b>BEWARE:</b> this function may be called only once,
+     * otherwise the behavior is undefined.</p>
+     *
+     * @param libc C library implementation to use.
+     * @return new instance of framebuffer appropriate for the current session
+     * @throws RuntimeException initialization of the display or framebuffer fails
+     */
+    public static JavaFramebuffer initializeRealFramebuffer(ILibc libc) {
+        return initializeRealDisplay(libc).openFramebuffer();
+    }
 }
